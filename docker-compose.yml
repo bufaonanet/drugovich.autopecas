@@ -1,0 +1,11 @@
+﻿services:
+  drugovich.autopecas.api:
+    image: drugovich.autopecas.api
+    container_name: drugovich.autopecas.api
+    build:
+      context: .
+      dockerfile: src/drugovich.autopecas.api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development  
+    ports:
+      - "5001:80"   
