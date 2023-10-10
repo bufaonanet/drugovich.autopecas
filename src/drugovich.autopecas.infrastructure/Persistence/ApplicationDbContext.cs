@@ -1,4 +1,5 @@
-﻿using drugovich.autopecas.core;
+﻿using System.Reflection;
+using drugovich.autopecas.core;
 using Microsoft.EntityFrameworkCore;
 
 namespace drugovich.autopecas.infrastructure.Persistence;
@@ -12,4 +13,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<Cliente> Clientes { get; set; }
     public DbSet<Gerente> Gerentes { get; set; }
     public DbSet<Grupo> Grupos { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
 }

@@ -13,8 +13,11 @@ public static class ApplicationServiceReistration
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         
+        services.AddMediatR(cfg => 
+            cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+        
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddFluentValidationAutoValidation();
+        //services.AddFluentValidationAutoValidation();
         
         services.AddScoped<IGrupoService, GrupoService>();
         services.AddScoped<IClienteService, ClienteService>();

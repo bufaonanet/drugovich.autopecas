@@ -1,4 +1,8 @@
 ﻿using AutoMapper;
+using drugovich.autopecas.application.Features.Grupos.Commands.CreateGrupo;
+using drugovich.autopecas.application.Features.Grupos.Commands.UpdateGrupo;
+using drugovich.autopecas.application.Features.Grupos.Queries.GetGrupoById;
+using drugovich.autopecas.application.Features.Grupos.Queries.GetGrupoList;
 using drugovich.autopecas.application.InputModels;
 using drugovich.autopecas.application.ViewModels;
 using drugovich.autopecas.core;
@@ -12,6 +16,10 @@ public class MappingProfile : Profile
     {
         CreateMap<Grupo, GrupoViewModel>();
         CreateMap<CreateGrupoInputModel, Grupo>();
+        CreateMap<Grupo, CreateGrupoDto>();
+        CreateMap<Grupo, GrupoListVm>(); 
+        CreateMap<Grupo, GrupoVm>();
+        CreateMap<UpdateGrupoCommand, Grupo>();
 
         CreateMap<Cliente, ClienteViewModel>()
             .ForMember(dest => dest.GrupoNome, 

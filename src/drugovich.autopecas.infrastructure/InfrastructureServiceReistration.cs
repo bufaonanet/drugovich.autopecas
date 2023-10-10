@@ -27,24 +27,17 @@ public static class InfrastructureServiceReistration
     
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        // builder.Services.AddSingleton<DevFreelaDbContextInMemory>();
-        // var connectionString = configuration.GetConnectionString("DevFreelaCs");
-        // services.AddDbContext<DevFreelaDbContext>(options =>
-        // {
-        //     var useInMemoryDb = configuration.GetValue<bool>("UseInMemoryDb");
-        //
-        //     if (useInMemoryDb)
-        //         options.UseInMemoryDatabase("DbInMemory");
-        //     else
-        //         options.UseSqlServer(connectionString);
-        // });
-        
+         var connectionString = configuration.GetConnectionString("drugovichdb");
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseInMemoryDatabase("InMemoryDb");
-
+            var useInMemoryDb = configuration.GetValue<bool>("UseInMemoryDb");
+        
+            if (useInMemoryDb)
+                options.UseInMemoryDatabase("DbInMemory");
+            else
+                options.UseSqlServer(connectionString);
         });
-
+        
         return services;
     }
     

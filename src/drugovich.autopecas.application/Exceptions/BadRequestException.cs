@@ -2,7 +2,7 @@
 
 namespace drugovich.autopecas.application.Exceptions;
 
-public class BadRequestException : Exception
+public class BadRequestException : ApplicationException
 {
     public IDictionary<string, string[]> ValidationErros { get; set; }
     

@@ -22,65 +22,41 @@ public class ExceptionMiddleware
         {
             await _next(context);
         }
-        catch (Exception ex)
+        catch (ApplicationException ex)
         {
             await HandleExceptionAsync(context, ex);
         }
     }
     
-    private async Task HandleExceptionAsync(HttpContext httpContext, Exception ex)
+    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
-        CustomProblemDetails problem;
+        var httpStatusCode = HttpStatusCode.InternalServerError;
+        context.Response.ContentType = "application/json";
+        var result = string.Empty;
 
-        switch (ex)
+        switch (exception)
         {
             case BadRequestException badRequest:
-                statusCode = HttpStatusCode.BadRequest;
-                problem = new CustomProblemDetails
-                {
-                    Title = ex.Message,
-                    Status = (int)statusCode,
-                    Detail = badRequest.InnerException?.Message,
-                    Type = nameof(BadRequestException),
-                    Erros = badRequest.ValidationErros
-                };
+                httpStatusCode = HttpStatusCode.BadRequest;
                 break;
-
             case NotFoundException notFound:
-                statusCode = HttpStatusCode.NotFound;
-                problem = new CustomProblemDetails
-                {
-                    Title = notFound.Message,
-                    Status = (int)statusCode,
-                    Type = nameof(NotFoundException),
-                    Detail = notFound.InnerException?.Message,
-                };
+                httpStatusCode = HttpStatusCode.NotFound;
                 break;
             case DomainException domainException:
-                statusCode = HttpStatusCode.BadRequest;
-                problem = new CustomProblemDetails
-                {
-                    Title = domainException.Message,
-                    Status = (int)statusCode,
-                    Type = nameof(DomainException),
-                    Detail = domainException.InnerException?.Message,
-                };
+                httpStatusCode = HttpStatusCode.BadRequest;
                 break;
             default:
-                problem = new CustomProblemDetails
-                {
-                    Title = ex.Message,
-                    Status = (int)statusCode,
-                    Type = nameof(HttpStatusCode.InternalServerError),
-                    Detail = ex.StackTrace,
-                };
+                httpStatusCode = HttpStatusCode.BadRequest;
                 break;
         }
+        
+        context.Response.StatusCode = (int)httpStatusCode;
 
-        httpContext.Response.StatusCode = (int)statusCode;
-        var logMessage = JsonConvert.SerializeObject(problem);
-        _logger.LogError(logMessage);
-        await httpContext.Response.WriteAsJsonAsync(problem);
+        if (result == string.Empty)
+        {
+            result = JsonConvert.SerializeObject(new { error = exception.Message });
+        }
+        _logger.LogError(result);
+        await context.Response.WriteAsJsonAsync(result);
     }
 }
