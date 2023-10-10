@@ -9,3 +9,19 @@
       - ASPNETCORE_ENVIRONMENT=Development  
     ports:
       - "5001:80"   
+    networks:
+      - sua-rede
+  
+  drugovich-db:
+    image: mcr.microsoft.com/mssql/server
+    container_name: drugovich-db
+    environment:
+      SA_PASSWORD: "SwN12345678" 
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - sua-rede
+  
+networks:
+  sua-rede:

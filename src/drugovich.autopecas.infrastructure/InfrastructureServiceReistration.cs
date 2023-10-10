@@ -27,7 +27,7 @@ public static class InfrastructureServiceReistration
     
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-         var connectionString = configuration.GetConnectionString("drugovichdb");
+         var connectionString = configuration.GetConnectionString("container");
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             var useInMemoryDb = configuration.GetValue<bool>("UseInMemoryDb");

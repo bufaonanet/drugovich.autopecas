@@ -58,20 +58,11 @@ public static class ApiModule
     public static async Task SeedDatabase(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<ApplicationDbContext>>();
-        try
-        {
-            var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
-            if (context != null)
-            {
-                await context.Database.EnsureCreatedAsync();
-                await context.Database.MigrateAsync();
-                logger.LogInformation("Executando migrations");
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Um erro ocorreu ao executar as migrations");
-        }
+
+        var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+        if (context == null)
+            throw new InvalidOperationException("O contexto do banco de dados não foi registrado.");
+
+        await context.SeedDb();
     }
 }
